@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ESKD Risk in Renal AL Amyloidosis</title>
+<meta name="description" content="Individual 1-, 3- and 5-year risk of kidney failure (ESKD) in renal AL amyloidosis, accounting for the competing risk of death. Research use only.">
+<style>
+  :root {
+    --cardinal: #8C1515; --cardinal-dark: #5E0F0F; --ink: #2E2D29; --muted: #5F574F; --line: #DAD7CB;
+    --panel: #F4F4F4; --bg: #FFFFFF; --death: #8A97A3; --alive: #D6E3EC; --warn: #9A4A00;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --ink: #ECEAE6; --muted: #B8B2AA; --line: #4A4742; --panel: #24221F; --bg: #171614; --alive: #3A4752; --death: #6E7A86; --warn: #F0A050; --accent: #E8A0A0; }
+  }
+  :root { --accent: var(--cardinal); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent: #E8A0A0; } }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.45 Helvetica, "Helvetica Neue", Arial, sans-serif; }
+  header { background: var(--cardinal); color: #fff; padding: 14px 16px 12px; }
+  header h1 { margin: 0; font-size: 1.15rem; line-height: 1.25; }
+  header p { margin: 4px 0 0; font-size: 0.8rem; opacity: 0.9; }
+  main { max-width: 760px; margin: 0 auto; padding: 12px 16px 32px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin: 12px 0; }
+  h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0 0 10px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+  label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 4px; }
+  input[type=number] { width: 100%; font-size: 1.15rem; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); }
+  input[type=number]:focus { outline: 2px solid var(--cardinal); border-color: var(--cardinal); }
+  .seg { display: flex; border: 1px solid var(--cardinal); border-radius: 8px; overflow: hidden; }
+  .seg button { flex: 1; border: 0; background: var(--bg); color: var(--accent); font: inherit; font-size: 0.9rem; padding: 10px 6px; cursor: pointer; }
+  .seg button[aria-pressed=true] { background: var(--cardinal); color: #fff; }
+  .row { margin-top: 12px; }
+  .utp-wrap { display: grid; grid-template-columns: 1fr 120px; gap: 10px; align-items: end; }
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .tile { text-align: center; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 4px; }
+  .tile .t { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .tile .v { font-size: 1.9rem; font-weight: 700; color: var(--accent); line-height: 1.15; }
+  .tile .s { font-size: 0.72rem; color: var(--muted); }
+  .bars .b { display: grid; grid-template-columns: 52px 1fr; gap: 8px; align-items: center; margin: 6px 0; font-size: 0.85rem; }
+  .bar { display: flex; height: 26px; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); }
+  .bar span { display: flex; align-items: center; justify-content: center; font-size: 0.75rem; white-space: nowrap; overflow: hidden; }
+  .bar .e { background: var(--cardinal); color: #fff; } .bar .d { background: var(--death); color: #fff; } .bar .a { background: var(--alive); color: var(--ink); }
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 0.78rem; color: var(--muted); margin-top: 6px; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 5px; vertical-align: -2px; }
+  .stage { border-left: 5px solid var(--cardinal); padding: 8px 12px; background: var(--bg); border-radius: 6px; font-size: 0.9rem; }
+  .muted { color: var(--muted); font-size: 0.82rem; }
+  .warn { color: var(--warn); font-size: 0.85rem; margin: 8px 0 0; }
+  svg text { fill: var(--muted); font: 11px Helvetica, Arial, sans-serif; }
+  svg .lab { fill: var(--accent); font-weight: 700; font-size: 12px; }
+  details summary { cursor: pointer; color: var(--cardinal); font-weight: 600; }
+  a { color: var(--cardinal); }
+  footer { max-width: 760px; margin: 0 auto; padding: 0 16px 28px; }
+  @media (min-width: 640px) { header h1 { font-size: 1.4rem; } .tile .v { font-size: 2.3rem; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>ESKD risk in renal AL amyloidosis</h1>
+  <p>Competing-risks model &middot; Stanford Hematology &amp; BU Amyloidosis Center &middot; research use only</p>
+</header>
+<main>
+  <section class="card" aria-labelledby="in-h">
+    <h2 id="in-h">Values at evaluation</h2>
+    <div class="grid2">
+      <div><label for="age">Age (years)</label><input id="age" type="number" inputmode="decimal" min="18" max="95" step="1" value="62"></div>
+      <div><label for="egfr">eGFR (mL/min/1.73 m&sup2;)</label><input id="egfr" type="number" inputmode="decimal" min="2" max="150" step="1" value="55"></div>
+    </div>
+    <div class="row">
+      <label>24-hour urine protein</label>
+      <div class="seg" role="group" aria-label="Urine protein available">
+        <button type="button" id="mode-utp" aria-pressed="true">Measured</button>
+        <button type="button" id="mode-alb" aria-pressed="false">Not available</button>
+      </div>
+    </div>
+    <div class="row" id="utp-block">
+      <div class="utp-wrap">
+        <div><label for="utp">Urine protein</label><input id="utp" type="number" inputmode="decimal" min="0" step="0.1" value="2"></div>
+        <div><label>Unit</label><div class="seg" role="group" aria-label="Unit">
+          <button type="button" id="unit-g" aria-pressed="true">g/day</button><button type="button" id="unit-mg" aria-pressed="false">mg/day</button></div></div>
+      </div>
+    </div>
+    <div class="row" id="alb-block" hidden>
+      <label for="alb">Serum albumin (g/dL)</label><input id="alb" type="number" inputmode="decimal" min="0.5" max="6" step="0.1" value="3.2">
+      <p class="muted">Without urine studies a fallback model (age, eGFR, albumin) is used, with no Palladini comparison.</p>
+    </div>
+    <div id="warnings" aria-live="polite"></div>
+  </section>
+
+  <section class="card" aria-labelledby="out-h">
+    <h2 id="out-h">Risk of ESKD (dialysis or transplant)</h2>
+    <div class="tiles" id="tiles"></div>
+    <div id="chart" class="row"></div>
+  </section>
+
+  <section class="card" id="states-card" aria-labelledby="st-h">
+    <h2 id="st-h">What happens to patients like this</h2>
+    <div class="bars" id="bars"></div>
+    <div class="legend"><span><i style="background:var(--cardinal)"></i>ESKD</span><span><i style="background:var(--death)"></i>Died without ESKD</span><span><i style="background:var(--alive)"></i>Alive without ESKD</span></div>
+    <p class="muted" id="km-note"></p>
+  </section>
+
+  <section class="card" id="stage-card" aria-labelledby="sg-h">
+    <h2 id="sg-h">Compared with Palladini renal staging</h2>
+    <div id="stage"></div>
+  </section>
+
+  <section class="card">
+    <details>
+      <summary>About this calculator</summary>
+      <p class="muted">Fine-Gray competing-risks model with age and natural splines of eGFR and log 24-hour urine protein, fitted in
+        <span id="n-cohort"></span> patients with renal AL amyloidosis evaluated at the Boston University Amyloidosis Center, 1994-2023
+        (time zero = first center visit, when the labs are drawn). Death without ESKD is the competing event. Internally validated
+        (bootstrap and repeated cross-validation over 20 imputations); not yet externally validated.</p>
+      <p class="muted">Estimates are population averages from three baseline values. They do not account for treatment or hematologic
+        response. Not a substitute for clinical judgement. Nothing you enter leaves this page.</p>
+    </details>
+  </section>
+</main>
+<footer><p class="muted">Anand S, Staron A, Burke N, Sanchorawala V, Verma A. ASH 2026 (abstract abs26-10165). Model version <span id="ver"></span>.</p></footer>
+
+<script src="model.js"></script>
+<script src="calc.js"></script>
+<script>
+(function () {
+  "use strict";
+  var M = window.ESKD_MODEL, C = window.ESKD, $ = function (id) { return document.getElementById(id); };
+  var KEY = [1, 3, 5], state = { mode: "utp", unit: "g" };
+  var pct = function (p, d) { return (100 * p).toFixed(d == null ? 0 : d) + "%"; };
+  $("n-cohort").textContent = M.cohort.n.toLocaleString(); $("ver").textContent = M.version;
+
+  function press(on, off) { $(on).setAttribute("aria-pressed", "true"); $(off).setAttribute("aria-pressed", "false"); }
+  $("mode-utp").onclick = function () { state.mode = "utp"; press("mode-utp", "mode-alb"); update(); };
+  $("mode-alb").onclick = function () { state.mode = "alb"; press("mode-alb", "mode-utp"); update(); };
+  $("unit-g").onclick = function () { if (state.unit === "mg") { var v = num("utp"); if (v != null) $("utp").value = +(v / 1000).toFixed(2); } state.unit = "g"; $("utp").step = "0.1"; press("unit-g", "unit-mg"); update(); };
+  $("unit-mg").onclick = function () { if (state.unit === "g") { var v = num("utp"); if (v != null) $("utp").value = Math.round(v * 1000); } state.unit = "mg"; $("utp").step = "100"; press("unit-mg", "unit-g"); update(); };
+  ["age", "egfr", "utp", "alb"].forEach(function (id) { $(id).addEventListener("input", update); });
+
+  function num(id) { var v = parseFloat($(id).value); return isFinite(v) ? v : null; }
+
+  function chart(eskd, stageCurve) {
+    var W = 340, H = 190, L = 34, R = 10, T = 12, B = 26, n = eskd.length, tmax = M.grid_max;
+    var top = Math.max(0.05, Math.max.apply(null, eskd.concat(stageCurve || [0]))); var ymax = Math.ceil((top * 100 + 3) / 5) * 5 / 100;
+    var X = function (t) { return L + (W - L - R) * t / tmax; }, Y = function (p) { return T + (H - T - B) * (1 - p / ymax); };
+    var path = function (arr, step) { return arr.map(function (p, i) { var t = i * M.grid_step; return (i ? (step ? "H" + X(t).toFixed(1) + "V" : "L" + X(t).toFixed(1) + ",") : "M" + X(t).toFixed(1) + ",") + Y(p).toFixed(1); }).join(""); };
+    var s = '<svg viewBox="0 0 ' + W + " " + H + '" width="100%" role="img" aria-label="Predicted cumulative ESKD risk over 5 years">';
+    for (var g = 0, gs = ymax > 0.4 ? 0.2 : ymax > 0.2 ? 0.1 : 0.05; g <= ymax + 1e-9; g += gs) s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(g) + '" y2="' + Y(g) + '" stroke="var(--line)"/><text x="' + (L - 5) + '" y="' + (Y(g) + 4) + '" text-anchor="end">' + Math.round(g * 100) + "%</text>";
+    for (var t = 0; t <= tmax; t++) s += '<text x="' + X(t) + '" y="' + (H - 8) + '" text-anchor="middle">' + t + (t === tmax ? " y" : "") + "</text>";
+    if (stageCurve) s += '<path d="' + path(stageCurve, true) + '" fill="none" stroke="var(--muted)" stroke-width="1.6" stroke-dasharray="5 4"/>';
+    s += '<path d="' + path(eskd) + '" fill="none" stroke="var(--cardinal)" stroke-width="2.6"/>';
+    KEY.forEach(function (k) { var p = eskd[Math.round(k / M.grid_step)]; s += '<circle cx="' + X(k) + '" cy="' + Y(p) + '" r="4" fill="var(--cardinal)"/><text class="lab" x="' + X(k) + '" y="' + (Y(p) - 9) + '" text-anchor="' + (k === KEY[KEY.length - 1] ? "end" : "middle") + '">' + pct(p) + "</text>"; });
+    s += "</svg>";
+    var leg = '<div class="legend"><span><i style="background:var(--cardinal)"></i>This patient</span>' + (stageCurve ? '<span><i style="background:var(--muted)"></i>Stage average (observed, dashed)</span>' : "") + "</div>";
+    return s + leg;
+  }
+
+  function update() {
+    var age = num("age"), egfr = num("egfr"), alb = num("alb"), utpRaw = num("utp"), useUtp = state.mode === "utp";
+    var utpMg = utpRaw == null ? null : (state.unit === "g" ? utpRaw * 1000 : utpRaw);
+    $("utp-block").hidden = !useUtp; $("alb-block").hidden = useUtp;
+    $("states-card").hidden = !useUtp; $("stage-card").hidden = !useUtp;
+    var warn = [], ok = age != null && age >= 18 && age <= 95 && egfr != null && egfr >= 2 && egfr <= 150 &&
+      (useUtp ? utpMg != null && utpMg >= 0 : alb != null && alb >= 0.5 && alb <= 6);
+    if (!ok) warn.push("Enter age (18-95), eGFR (2-150) and " + (useUtp ? "urine protein" : "albumin (0.5-6 g/dL)") + ".");
+    if (ok && egfr > 125) warn.push("eGFR above 125: few development patients in this range; the estimate is an extrapolation.");
+    if (ok && useUtp && utpMg > 20000) warn.push("Urine protein above 20 g/day: few development patients in this range; the estimate is an extrapolation.");
+    if (ok && useUtp && utpMg > 0 && utpMg < 100) warn.push("Urine protein below 100 mg/day: check the unit.");
+    $("warnings").innerHTML = warn.map(function (w) { return '<p class="warn">' + w + "</p>"; }).join("");
+    if (!ok) { $("tiles").innerHTML = ""; $("chart").innerHTML = ""; $("bars").innerHTML = ""; $("stage").innerHTML = ""; $("km-note").textContent = ""; return; }
+
+    var x = C.inputs(age, egfr, useUtp ? utpMg : null, alb), which = useUtp ? "eskd" : "albumin";
+    var eskd = C.curve(M, which, x), key = KEY.map(function (k) { return eskd[Math.round(k / M.grid_step)]; });
+    var death = useUtp ? C.curve(M, "death", x) : null, dKey = death ? KEY.map(function (k) { return death[Math.round(k / M.grid_step)]; }) : null;
+    var stage = useUtp ? C.palladiniStage(egfr, utpMg) : null, stageCurve = stage ? M.stage_curve[stage] : null;
+
+    $("tiles").innerHTML = KEY.map(function (k, i) {
+      var sub = dKey ? "death " + pct(Math.min(dKey[i], 1 - key[i])) : "fallback model";
+      return '<div class="tile"><div class="t">' + k + "-year</div><div class=\"v\">" + pct(key[i], 1) + '</div><div class="s">' + sub + "</div></div>"; }).join("");
+    $("chart").innerHTML = chart(eskd, stageCurve);
+
+    if (useUtp) {
+      $("bars").innerHTML = KEY.map(function (k, i) {
+        var e = key[i], d = Math.min(dKey[i], 1 - e), a = 1 - e - d, w = function (p) { return (100 * p).toFixed(2) + "%"; }, l = function (p) { return p >= 0.08 ? pct(p) : ""; };
+        return '<div class="b"><span>' + k + " year" + (k > 1 ? "s" : "") + '</span><div class="bar"><span class="e" style="width:' + w(e) + '">' + l(e) + '</span><span class="d" style="width:' + w(d) + '">' + l(d) + '</span><span class="a" style="width:' + w(a) + '">' + l(a) + "</span></div></div>"; }).join("");
+      var naive3 = C.risk(M, "naive", x, 3);
+      $("km-note").textContent = "Why competing risks matter: at 3 years this patient has an estimated " + pct(key[1]) + " chance of ESKD and " + pct(dKey[1]) +
+        " chance of dying without it. A method that censors death (Kaplan-Meier style) would put the ESKD risk at " + pct(naive3) + ".";
+      var inc = M.stage_incidence[stage], q = M.stage_quantiles[stage], r3 = key[1] * 100;
+      var pos = r3 < q.p25 ? "in the lower quarter" : r3 > q.p75 ? "in the upper quarter" : "in the middle half";
+      $("stage").innerHTML = '<div class="stage"><b>Palladini stage ' + stage + "</b> <span class=\"muted\">(eGFR " + (egfr < 50 ? "&lt;" : "&ge;") + " 50, urine protein " + (utpMg >= 5000 ? "&ge;" : "&lt;") + " 5 g/day)</span>" +
+        "<p style=\"margin:6px 0 0\">Observed ESKD in this stage: " + inc.pct.map(function (v, i) { return v.toFixed(v < 1 ? 1 : 0) + "% at " + inc.t[i] + " y"; }).join(", ") + " (n = " + inc.n + ").</p></div>" +
+        '<p class="muted" style="margin-top:10px">Among stage ' + stage + " patients in the development cohort, predicted 3-year risk ran from " + q.p10 + "% (10th percentile) to " + q.p90 + "% (90th). This patient's " + r3.toFixed(1) + "% is " + pos + " of the stage.</p>";
+    }
+  }
+  update();
+})();
+</script>
+</body>
+</html>
