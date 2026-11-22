@@ -170,7 +170,7 @@
     s += '<path d="' + path(eskd) + '" fill="none" stroke="var(--cardinal)" stroke-width="2.6"/>';
     KEY.forEach(function (k) { var p = eskd[Math.round(k / M.grid_step)]; s += '<circle cx="' + X(k) + '" cy="' + Y(p) + '" r="4" fill="var(--cardinal)"/><text class="lab" x="' + X(k) + '" y="' + (Y(p) - 9) + '" text-anchor="' + (k === KEY[KEY.length - 1] ? "end" : "middle") + '">' + pct(p) + "</text>"; });
     s += "</svg>";
-    var leg = '<div class="legend"><span><i style="background:var(--cardinal)"></i>This patient</span>' + (stageCurve ? '<span><i style="background:var(--muted)"></i>Palladini stage ' + stage + ' patients (observed, dashed)</span>' : "") + "</div>";
+    var leg = '<div class="legend"><span><i style="background:var(--cardinal)"></i>This patient</span>' + (stageCurve ? '<span><i style="background:var(--muted)"></i>Palladini stage ' + stage + ' patients</span>' : "") + "</div>";
     return s + leg;
   }
 
