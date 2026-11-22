@@ -62,7 +62,7 @@
   .warn { color: var(--warn); font-size: 0.85rem; margin: 8px 0 0; }
   svg text { fill: var(--muted); font: 11px Helvetica, Arial, sans-serif; }
   svg .lab { fill: var(--accent); font-weight: 700; font-size: 12px; }
-  details summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+  .about-h { margin: 0; font-size: 1rem; color: var(--accent); }
   a { color: var(--accent); }
   @media (min-width: 640px) { header h1 { font-size: 1.4rem; } .tile .v { font-size: 2.3rem; } }
   /* computer screens: cards side by side so the whole result fits on one screen; phones keep the single column */
@@ -135,15 +135,13 @@
     <div id="stage"></div>
   </section>
 
-  <section class="card" id="about-card">
-    <details open>
-      <summary>About this calculator</summary>
+  <section class="card" id="about-card" aria-labelledby="ab-h">
+      <h3 class="about-h" id="ab-h">About this calculator</h3>
       <p class="muted">Fine-Gray model (age, eGFR, 24-hour urine protein) fitted in <span id="n-cohort"></span> patients with renal AL
         amyloidosis at the BU Amyloidosis Center, 1994-2023, with death as the competing event. Risk is from the first center visit.
         Internally validated; external validation in progress.</p>
       <p class="muted">Population-average estimates; they do not reflect treatment or hematologic response. Not a substitute for
         clinical judgement. Nothing you enter leaves this page.</p>
-    </details>
   </section>
 
   <section class="refs" id="refs" aria-label="References">
