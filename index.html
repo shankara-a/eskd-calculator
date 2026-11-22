@@ -5,21 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ESKD Risk in Renal AL Amyloidosis</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect width=%2216%22 height=%2216%22 rx=%223%22 fill=%22%238C1515%22/%3E%3C/svg%3E">
+<script>try { if (localStorage.getItem("eskd-theme") === "dark") document.documentElement.setAttribute("data-theme", "dark"); } catch (e) {}</script>
 <meta name="description" content="Individual 1-, 3- and 5-year risk of kidney failure (ESKD) in renal AL amyloidosis, accounting for the competing risk of death. Research use only.">
 <style>
   :root {
     --cardinal: #8C1515; --cardinal-dark: #5E0F0F; --ink: #2E2D29; --muted: #5F574F; --line: #DAD7CB;
     --panel: #F4F4F4; --bg: #FFFFFF; --death: #8A97A3; --alive: #D6E3EC; --warn: #9A4A00;
   }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) { --ink: #ECEAE6; --muted: #B8B2AA; --line: #4A4742; --panel: #24221F; --bg: #171614; --alive: #3A4752; --death: #6E7A86; --warn: #F0A050; --accent: #E8A0A0; }
-  }
-  :root { --accent: var(--cardinal); }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --accent: #E8A0A0; } }
+  :root { --accent: var(--cardinal); color-scheme: light; }
+  /* light by default; dark only when the reader picks it (button in the header) */
+  :root[data-theme="dark"] { --ink: #ECEAE6; --muted: #B8B2AA; --line: #4A4742; --panel: #24221F; --bg: #171614; --alive: #3A4752; --death: #6E7A86; --warn: #F0A050; --accent: #E8A0A0; color-scheme: dark; }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.45 Helvetica, "Helvetica Neue", Arial, sans-serif; }
-  header { background: var(--cardinal); color: #fff; padding: 14px 16px 12px; }
+  header { position: relative; background: var(--cardinal); color: #fff; padding: 14px 64px 12px 16px; }
+  .theme-btn { position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(255,255,255,0.55); border-radius: 8px; background: transparent; color: #fff; cursor: pointer; padding: 0; }
+  .theme-btn:hover { background: rgba(255,255,255,0.12); }
+  .theme-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+  .theme-btn .sun, :root[data-theme="dark"] .theme-btn .moon { display: none; }
+  :root[data-theme="dark"] .theme-btn .sun { display: block; }
   header h1 { margin: 0; font-size: 1.15rem; line-height: 1.25; }
   header p { margin: 4px 0 0; font-size: 0.8rem; opacity: 0.9; }
   main { max-width: 760px; margin: 0 auto; padding: 12px 16px 32px; }
@@ -50,8 +55,8 @@
   .warn { color: var(--warn); font-size: 0.85rem; margin: 8px 0 0; }
   svg text { fill: var(--muted); font: 11px Helvetica, Arial, sans-serif; }
   svg .lab { fill: var(--accent); font-weight: 700; font-size: 12px; }
-  details summary { cursor: pointer; color: var(--cardinal); font-weight: 600; }
-  a { color: var(--cardinal); }
+  details summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+  a { color: var(--accent); }
   footer { max-width: 760px; margin: 0 auto; padding: 0 16px 28px; }
   @media (min-width: 640px) { header h1 { font-size: 1.4rem; } .tile .v { font-size: 2.3rem; } }
 </style>
@@ -59,7 +64,11 @@
 <body>
 <header>
   <h1>ESKD risk in renal AL amyloidosis</h1>
-  <p>Competing-risks model &middot; Stanford Hematology &amp; BU Amyloidosis Center &middot; research use only</p>
+  <p>Competing-risks model &middot; BU Amyloidosis Center &amp; Stanford Hematology &middot; research use only</p>
+  <button type="button" class="theme-btn" id="theme" aria-pressed="false" aria-label="Switch to dark mode" title="Switch to dark mode">
+    <svg class="moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    <svg class="sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2.5M12 20v2.5M1.5 12h2.5M20 12h2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></svg>
+  </button>
 </header>
 <main>
   <section class="card" aria-labelledby="in-h">
@@ -131,6 +140,15 @@
   var pct = function (p, d) { return (100 * p).toFixed(d == null ? 0 : d) + "%"; };
   $("n-cohort").textContent = M.cohort.n.toLocaleString(); $("ver").textContent = M.version;
 
+  function setTheme(dark, save) {
+    if (dark) document.documentElement.setAttribute("data-theme", "dark"); else document.documentElement.removeAttribute("data-theme");
+    var b = $("theme"), lab = dark ? "Switch to light mode" : "Switch to dark mode";
+    b.setAttribute("aria-pressed", String(dark)); b.setAttribute("aria-label", lab); b.title = lab;
+    if (save) { try { localStorage.setItem("eskd-theme", dark ? "dark" : "light"); } catch (e) {} }
+  }
+  setTheme(document.documentElement.getAttribute("data-theme") === "dark", false);
+  $("theme").onclick = function () { setTheme(document.documentElement.getAttribute("data-theme") !== "dark", true); };
+
   function press(on, off) { $(on).setAttribute("aria-pressed", "true"); $(off).setAttribute("aria-pressed", "false"); }
   $("mode-utp").onclick = function () { state.mode = "utp"; press("mode-utp", "mode-alb"); update(); };
   $("mode-alb").onclick = function () { state.mode = "alb"; press("mode-alb", "mode-utp"); update(); };
@@ -140,7 +158,7 @@
 
   function num(id) { var v = parseFloat($(id).value); return isFinite(v) ? v : null; }
 
-  function chart(eskd, stageCurve) {
+  function chart(eskd, stageCurve, stage) {
     var W = 340, H = 190, L = 34, R = 10, T = 12, B = 26, n = eskd.length, tmax = M.grid_max;
     var top = Math.max(0.05, Math.max.apply(null, eskd.concat(stageCurve || [0]))); var ymax = Math.ceil((top * 100 + 3) / 5) * 5 / 100;
     var X = function (t) { return L + (W - L - R) * t / tmax; }, Y = function (p) { return T + (H - T - B) * (1 - p / ymax); };
@@ -152,7 +170,7 @@
     s += '<path d="' + path(eskd) + '" fill="none" stroke="var(--cardinal)" stroke-width="2.6"/>';
     KEY.forEach(function (k) { var p = eskd[Math.round(k / M.grid_step)]; s += '<circle cx="' + X(k) + '" cy="' + Y(p) + '" r="4" fill="var(--cardinal)"/><text class="lab" x="' + X(k) + '" y="' + (Y(p) - 9) + '" text-anchor="' + (k === KEY[KEY.length - 1] ? "end" : "middle") + '">' + pct(p) + "</text>"; });
     s += "</svg>";
-    var leg = '<div class="legend"><span><i style="background:var(--cardinal)"></i>This patient</span>' + (stageCurve ? '<span><i style="background:var(--muted)"></i>Stage average (observed, dashed)</span>' : "") + "</div>";
+    var leg = '<div class="legend"><span><i style="background:var(--cardinal)"></i>This patient</span>' + (stageCurve ? '<span><i style="background:var(--muted)"></i>Palladini stage ' + stage + ' patients (observed, dashed)</span>' : "") + "</div>";
     return s + leg;
   }
 
@@ -178,7 +196,7 @@
     $("tiles").innerHTML = KEY.map(function (k, i) {
       var sub = dKey ? "death " + pct(Math.min(dKey[i], 1 - key[i])) : "fallback model";
       return '<div class="tile"><div class="t">' + k + "-year</div><div class=\"v\">" + pct(key[i], 1) + '</div><div class="s">' + sub + "</div></div>"; }).join("");
-    $("chart").innerHTML = chart(eskd, stageCurve);
+    $("chart").innerHTML = chart(eskd, stageCurve, stage);
 
     if (useUtp) {
       $("bars").innerHTML = KEY.map(function (k, i) {
