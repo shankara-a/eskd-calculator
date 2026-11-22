@@ -15,7 +15,7 @@ piecewise polynomials, baseline cumulative hazards on a 0.05-year grid, Palladin
 parameters only; no patient-level data. Predictions match the R implementation (`cmprsk::crr` / `predict.crr`) to
 within 1e-14.
 
-**Citation.** Anand S, Staron A, Burke N, Sanchorawala V, Verma A. An individualized competing-risks model for kidney
-failure in renal AL amyloidosis. ASH Annual Meeting 2026, abstract abs26-10165.
+**Citation.** Anand S, Staron A, Burke N, Sanchorawala V, Verma A. A competing risks model for prediction of kidney
+failure in newly diagnosed AL amyloidosis. ASH Annual Meeting 2026, abstract 5716.
 
 For research use only; not a substitute for clinical judgement.

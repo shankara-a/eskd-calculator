@@ -12,14 +12,15 @@
     --cardinal: #8C1515; --cardinal-dark: #5E0F0F; --ink: #2E2D29; --muted: #5F574F; --line: #DAD7CB;
     --panel: #F4F4F4; --bg: #FFFFFF; --death: #8A97A3; --alive: #D6E3EC; --warn: #9A4A00;
   }
-  :root { --accent: var(--cardinal); color-scheme: light; }
+  :root { --accent: var(--cardinal); color-scheme: light; --wrap: 760px; }
   /* light by default; dark only when the reader picks it (button in the header) */
   :root[data-theme="dark"] { --ink: #ECEAE6; --muted: #B8B2AA; --line: #4A4742; --panel: #24221F; --bg: #171614; --alive: #3A4752; --death: #6E7A86; --warn: #F0A050; --accent: #E8A0A0; color-scheme: dark; }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.45 Helvetica, "Helvetica Neue", Arial, sans-serif; }
-  header { position: relative; background: var(--cardinal); color: #fff; padding: 14px 64px 12px 16px; }
-  .theme-btn { position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+  header { background: var(--cardinal); color: #fff; padding: 14px 0 12px; }
+  .head-in { position: relative; max-width: var(--wrap); margin: 0 auto; padding: 0 64px 0 16px; }
+  .theme-btn { position: absolute; top: -2px; right: 16px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
     border: 1px solid rgba(255,255,255,0.55); border-radius: 8px; background: transparent; color: #fff; cursor: pointer; padding: 0; }
   .theme-btn:hover { background: rgba(255,255,255,0.12); }
   .theme-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
@@ -27,7 +28,13 @@
   :root[data-theme="dark"] .theme-btn .sun { display: block; }
   header h1 { margin: 0; font-size: 1.15rem; line-height: 1.25; }
   header p { margin: 4px 0 0; font-size: 0.8rem; opacity: 0.9; }
-  main { max-width: 760px; margin: 0 auto; padding: 12px 16px 32px; }
+  main { max-width: var(--wrap); margin: 0 auto; padding: 12px 16px 32px; }
+  sup { font-size: 0.6em; line-height: 0; }
+  sup a { color: inherit; text-decoration: none; }
+  .refs { font-size: 0.78rem; color: var(--muted); margin: 12px 0 0; }
+  .refs ol { margin: 0 0 6px; padding-left: 1.4em; }
+  .refs li { margin: 2px 0; }
+  .refs p { margin: 0; }
   .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin: 12px 0; }
   h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0 0 10px; }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
@@ -57,31 +64,30 @@
   svg .lab { fill: var(--accent); font-weight: 700; font-size: 12px; }
   details summary { cursor: pointer; color: var(--accent); font-weight: 600; }
   a { color: var(--accent); }
-  footer { max-width: 760px; margin: 0 auto; padding: 0 16px 28px; }
   @media (min-width: 640px) { header h1 { font-size: 1.4rem; } .tile .v { font-size: 2.3rem; } }
   /* computer screens: cards side by side so the whole result fits on one screen; phones keep the single column */
   @media (min-width: 820px) {
-    main { max-width: 1100px; display: grid; gap: 12px; align-items: start; grid-template-columns: 1fr 1fr;
-      grid-template-areas: "in out" "st out" "sg about"; }
-    main > .card { margin: 0; }
-    #in-card { grid-area: in; } #out-card { grid-area: out; } #states-card { grid-area: st; } #stage-card { grid-area: sg; } #about-card { grid-area: about; }
-    footer { max-width: 1100px; }
+    :root { --wrap: 1100px; }
+    main { display: grid; gap: 12px; align-items: start; grid-template-columns: 1fr 1fr;
+      grid-template-areas: "in out" "st out" "sg about" "sg refs"; }
+    main > .card, .refs { margin: 0; }
+    #in-card { grid-area: in; } #out-card { grid-area: out; align-self: stretch; } #states-card { grid-area: st; } #stage-card { grid-area: sg; } #about-card { grid-area: about; } #refs { grid-area: refs; }
   }
   @media (min-width: 1080px) {
-    main { max-width: 1400px; grid-template-columns: 1fr 1.1fr 1fr; grid-template-rows: auto 1fr; grid-template-areas: "in out st" "about out sg"; }
-    footer { max-width: 1400px; }
+    :root { --wrap: 1400px; }
+    main { grid-template-columns: 1fr 1.1fr 1fr; grid-template-rows: auto auto auto; grid-template-areas: "in out st" "about out sg" ". . refs"; }
   }
 </style>
 </head>
 <body>
-<header>
-  <h1>ESKD risk in renal AL amyloidosis</h1>
+<header><div class="head-in">
+  <h1>ESKD risk in renal AL amyloidosis<sup><a href="#ref1" aria-label="Reference 1">1</a></sup></h1>
   <p>Competing-risks model &middot; BU Amyloidosis Center &amp; Stanford Hematology &middot; research use only</p>
   <button type="button" class="theme-btn" id="theme" aria-pressed="false" aria-label="Switch to dark mode" title="Switch to dark mode">
     <svg class="moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
     <svg class="sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2.5M12 20v2.5M1.5 12h2.5M20 12h2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></svg>
   </button>
-</header>
+</div></header>
 <main>
   <section class="card" id="in-card" aria-labelledby="in-h">
     <h2 id="in-h">Values at evaluation</h2>
@@ -124,7 +130,7 @@
   </section>
 
   <section class="card" id="stage-card" aria-labelledby="sg-h">
-    <h2 id="sg-h">Compared with Palladini renal staging</h2>
+    <h2 id="sg-h">Compared with Palladini renal staging<sup><a href="#ref2" aria-label="Reference 2">2</a></sup></h2>
     <div id="stage"></div>
   </section>
 
@@ -139,8 +145,16 @@
         response. Not a substitute for clinical judgement. Nothing you enter leaves this page.</p>
     </details>
   </section>
+
+  <section class="refs" id="refs" aria-label="References">
+    <ol>
+      <li id="ref1">Anand S, Staron A, Burke N, Sanchorawala V, Verma A. A competing risks model for prediction of kidney failure in newly diagnosed AL amyloidosis. ASH Annual Meeting 2026, abstract 5716.</li>
+      <li id="ref2">Palladini G, Hegenbart U, Milani P, et al. A staging system for renal outcome and early markers of renal response to chemotherapy in AL amyloidosis. <i>Blood</i> 2014;124:2325-32. <a href="https://doi.org/10.1182/blood-2014-04-570010">doi:10.1182/blood-2014-04-570010</a></li>
+    </ol>
+    <p>Model version <span id="ver"></span>.</p>
+  </section>
 </main>
-<footer><p class="muted">Anand S, Staron A, Burke N, Sanchorawala V, Verma A. ASH 2026 (abstract abs26-10165). Model version <span id="ver"></span>.</p></footer>
+
 
 <script src="model.js"></script>
 <script src="calc.js"></script>
