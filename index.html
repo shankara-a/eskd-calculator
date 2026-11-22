@@ -59,6 +59,18 @@
   a { color: var(--accent); }
   footer { max-width: 760px; margin: 0 auto; padding: 0 16px 28px; }
   @media (min-width: 640px) { header h1 { font-size: 1.4rem; } .tile .v { font-size: 2.3rem; } }
+  /* computer screens: cards side by side so the whole result fits on one screen; phones keep the single column */
+  @media (min-width: 820px) {
+    main { max-width: 1100px; display: grid; gap: 12px; align-items: start; grid-template-columns: 1fr 1fr;
+      grid-template-areas: "in out" "st out" "sg about"; }
+    main > .card { margin: 0; }
+    #in-card { grid-area: in; } #out-card { grid-area: out; } #states-card { grid-area: st; } #stage-card { grid-area: sg; } #about-card { grid-area: about; }
+    footer { max-width: 1100px; }
+  }
+  @media (min-width: 1080px) {
+    main { max-width: 1400px; grid-template-columns: 1fr 1.1fr 1fr; grid-template-rows: auto 1fr; grid-template-areas: "in out st" "about out sg"; }
+    footer { max-width: 1400px; }
+  }
 </style>
 </head>
 <body>
@@ -71,7 +83,7 @@
   </button>
 </header>
 <main>
-  <section class="card" aria-labelledby="in-h">
+  <section class="card" id="in-card" aria-labelledby="in-h">
     <h2 id="in-h">Values at evaluation</h2>
     <div class="grid2">
       <div><label for="age">Age (years)</label><input id="age" type="number" inputmode="decimal" min="18" max="95" step="1" value="62"></div>
@@ -98,7 +110,7 @@
     <div id="warnings" aria-live="polite"></div>
   </section>
 
-  <section class="card" aria-labelledby="out-h">
+  <section class="card" id="out-card" aria-labelledby="out-h">
     <h2 id="out-h">Risk of ESKD (dialysis or transplant)</h2>
     <div class="tiles" id="tiles"></div>
     <div id="chart" class="row"></div>
@@ -116,7 +128,7 @@
     <div id="stage"></div>
   </section>
 
-  <section class="card">
+  <section class="card" id="about-card">
     <details>
       <summary>About this calculator</summary>
       <p class="muted">Fine-Gray competing-risks model with age and natural splines of eGFR and log 24-hour urine protein, fitted in
