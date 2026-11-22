@@ -75,7 +75,8 @@
   }
   @media (min-width: 1080px) {
     :root { --wrap: 1400px; }
-    main { grid-template-columns: 1fr 1.1fr 1fr; grid-template-rows: auto auto auto; grid-template-areas: "in out st" "about out sg" ". . refs"; }
+    main { grid-template-columns: 1fr 1.1fr 1fr; grid-template-rows: auto auto auto; grid-template-areas: "in out st" "about out sg" "refs refs ."; }
+    #about-card, #stage-card { align-self: stretch; }
   }
 </style>
 </head>
@@ -135,14 +136,13 @@
   </section>
 
   <section class="card" id="about-card">
-    <details>
+    <details open>
       <summary>About this calculator</summary>
-      <p class="muted">Fine-Gray competing-risks model with age and natural splines of eGFR and log 24-hour urine protein, fitted in
-        <span id="n-cohort"></span> patients with renal AL amyloidosis evaluated at the Boston University Amyloidosis Center, 1994-2023
-        (time zero = first center visit, when the labs are drawn). Death without ESKD is the competing event. Internally validated
-        (bootstrap and repeated cross-validation over 20 imputations); not yet externally validated.</p>
-      <p class="muted">Estimates are population averages from three baseline values. They do not account for treatment or hematologic
-        response. Not a substitute for clinical judgement. Nothing you enter leaves this page.</p>
+      <p class="muted">Fine-Gray model (age, eGFR, 24-hour urine protein) fitted in <span id="n-cohort"></span> patients with renal AL
+        amyloidosis at the BU Amyloidosis Center, 1994-2023, with death as the competing event. Risk is from the first center visit.
+        Internally validated; external validation in progress.</p>
+      <p class="muted">Population-average estimates; they do not reflect treatment or hematologic response. Not a substitute for
+        clinical judgement. Nothing you enter leaves this page.</p>
     </details>
   </section>
 
